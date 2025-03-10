@@ -14,7 +14,6 @@ html, body{
 body, .button, .func, .op, .calculator, .row{
     display: flex;
     justify-content: center;
-    align-items: stretch;
     flex: 1;
 }
 
@@ -34,11 +33,16 @@ body {
 }
 
 .answerBox{
-    align-self: stretch;
+    display: flex;
     flex: 1.2;
-    margin: min(.1vw, .1vh);
+    margin: min(.2vw, .2vh);
     border: min(.2vh, .2vw) solid slategray;
     border-radius: min(1vh, 1vw);
+    text-align: center;
+    justify-content: flex-end;
+    align-items: center;
+    padding: .2vh 1vw;
+    word-break: break-all;
 }
 
 .row {
@@ -47,13 +51,17 @@ body {
     padding-left: 1vw;
     padding-right: 1vw;
     background-color: #070707;
+    align-items: center;
 }
 
 .button, .op, .func, .answerBox {
-    align-items: center;
     font-size: min(2.5vw, 2.5vh);
     color: antiquewhite;
     font-weight: 700;
+}
+
+.button, .op, .func {
+    align-items: center;
     height: 5vh;
     width: 5vw;
 }
