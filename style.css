@@ -1,0 +1,78 @@
+html, body{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: black;
+}
+
+*, *::after, *::before {
+    box-sizing: inherit;
+}
+
+body, .button, .func, .op, .calculator, .row{
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex: 1;
+}
+
+body {
+    margin-top: 5vh;
+    margin-left: 30vw;
+    margin-right: 30vw;
+    
+}
+
+.calculator{
+    flex-direction: column;
+    width: 50vw;
+    height: 50vh;
+    border: 1vw solid #3b3b3b;
+    border-radius: min(1vh, 1vw);
+}
+
+.answerBox{
+    align-self: stretch;
+    flex: 1.2;
+    margin: min(.1vw, .1vh);
+    border: min(.2vh, .2vw) solid slategray;
+    border-radius: min(1vh, 1vw);
+}
+
+.row {
+    display: flex;
+    gap: min(1vh, 1vw);
+    padding-left: 1vw;
+    padding-right: 1vw;
+    background-color: #070707;
+}
+
+.button, .op, .func, .answerBox {
+    align-items: center;
+    font-size: min(2.5vw, 2.5vh);
+    color: antiquewhite;
+    font-weight: 700;
+    height: 5vh;
+    width: 5vw;
+}
+
+#zero {
+    flex: 2;
+}
+
+.button {
+    background-color: #1f1f1f;
+    border-radius: 2vh;
+}
+
+.op {
+    background-color: #b9701c;
+    border-radius: 2vh;
+}
+
+.func {
+    background-color: #333333;
+    border-radius: 2vh;
+}
