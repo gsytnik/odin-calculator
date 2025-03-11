@@ -84,3 +84,11 @@ body {
     background-color: #333333;
     border-radius: 2vh;
 }
+
+.op.active {
+    background-color: yellow;
+}
+
+.button.pressed, .op.pressed, .func.pressed {
+    background-color: #f1f1f1;
+}

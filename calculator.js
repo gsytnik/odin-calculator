@@ -8,37 +8,86 @@ function main() {
 
 function clickHandler(operation){
     return function(event) {
+        event.preventDefault();
+        event.stopPropagation();
         const target = event.target;
-
-        switch (target){
-            case target.id === 'AC':
-                clearOperation(operation);
-                operation.push(false);
-
-            case target.class === 'button':
-                addToNumber(target, operation);
-            
-            case target.class === 'op':
-                addOperator(target, operation);
-
-            case target.id === 'del':
-                deleteFrom(operation);
-
-            case target.id === 'neg':
-                negate(operation);
+        
+        if (target.id === 'AC') {
+            clearOperation(operation);
+            operation.push(false);
         }
 
+        else if (target.classList.contains('button')) {
+            if (operation.length === 3) {
+                toggleActiveOperator(operation[2], false);
+            }
+            addToNumber(target, operation);
+        }
+
+        else if (target.classList.contains('op')) {
+            addOperator(target, operation);
+        }
+
+        else if (target.id === 'del') {
+            deleteFrom(operation);
+        }
+
+        else if (target.id === 'neg') {
+            negate(operation);
+        }
+            
         displayResult(operation);
     }
 }
 
 
+function toggleActiveOperator(operatorText, active){
+    let operator;
+    switch (operatorText) {
+        case '+':
+            operator = document.querySelector('#plus');
+            break;
+            
+        case '-':
+            operator = document.querySelector('#minus');
+            break;
 
+        case 'x':
+            operator = document.querySelector('#x');
+            break;
+
+        case '/':
+            operator = document.querySelector('#div');
+            break;
+            
+        default:
+            console.log(`Something went wrong ${operatorText}`);
+    }
+
+    active ? operator.classList.add('active') : operator.classList.remove('active');
+}
+
+
+function displayResult(operation) {
+    const answerBox = document.querySelector('.answerBox');
+
+    if (operation[0] === 'FOOL!') {
+        answerBox.textContent = operation[0];
+        return;
+    }
+
+    if (operation.length === 1){
+        answerBox.textContent = '';
+        return;
+    }
+
+    answerBox.textContent = operation.length < 4 ? operation[1] : operation[3];
+}
 
 
 function deleteFrom(operation) {
     if (operation.length % 2 == 0) {
-        operation[operation.length - 1].slice(0, -1);
+        operation[operation.length - 1] = operation[operation.length - 1].slice(0, -1);
     }
 }
 
@@ -51,56 +100,75 @@ function negate(operation) {
     }
 
     if (operation.length === 4) {
-        operation[2] = operation[2].charAt(0) === '-' ? operation[2].slice(1) : '-' + operation[2];
+        operation[3] = operation[3].charAt(0) === '-' ? operation[3].slice(1) : '-' + operation[3];
     }
 }
 
 
-function evaluateOperation(operation) {
+function evaluateOperation(operation, operator) {
     let answer;
+    console.log(operation[1], operation[3])
     switch (operation[2]) {
         case '+':
-            answer = operation.parseFloat(operation[1]) + operation.parseFloat(operation[3]);
+            answer = parseFloat(operation[1]) + parseFloat(operation[3]);
+            break;
+
         case 'x':
-            answer = operation.parseFloat(operation[1]) * operation.parseFloat(operation[3]);
+            answer = parseFloat(operation[1]) * parseFloat(operation[3]);
+            break;
+
         case '-':
-            answer = operation.parseFloat(operation[1]) - operation.parseFloat(operation[3]);
+            answer = parseFloat(operation[1]) - parseFloat(operation[3]);
+            break;
+
         case '/':
             if (parseFloat(operation[3]) == 0){
-                displayDivisionByZero(operation);
+                clearOperation();
+                operation.push('FOOL!');
                 return;
             }
-            answer = operation.parseFloat(operation[1]) / operation.parseFloat(operation[3]);
+            answer = parseFloat(operation[1]) / parseFloat(operation[3]);
+            break;
+
         default:
             console.log(`Something went wrong ${operation}`);
     }
 
     clearOperation(operation);
-    operation.push(true);
-    operation.push(Number.isInteger(answer) ? parseInt(answer) : answer.toFixed(4));
+    operation.push(operator === '=');
+    operation.push(Number.isInteger(answer) ? BigInt(answer) : answer.toFixed(4));
 }
 
 
 function clearOperation(operation) {
-    for (i of operation) {
+    while (operation.length >= 1) {
         operation.pop();
     }
 }
 
 
 function addOperator(target, operation) {
+    operation[0] = false;
     switch (operation.length) {
         case 4:
-            evaluateOperation(operation);
+            evaluateOperation(operation, target.textContent);
             addOperator(target, operation);
+            return;
 
         case 2:
-            if (target.textContent !== '=') {
+            if (target.textContent !== '=' && operation[1] != '') {
                 operation.push(target.textContent);
+                toggleActiveOperator(operation[2], true);
             }
+            return;
 
-        default:
-            break;
+        case 3:
+            if (target.textContent !== '=') {
+                toggleActiveOperator(operation[2], false);
+                operation[2] = target.textContent;
+                toggleActiveOperator(operation[2], true);
+            }
+            return;
     }
 
 }
@@ -111,7 +179,7 @@ function addToNumber(target, operation){
         operation.push('');
     }
 
-    if (target.id == 'dec' && operation[operation.length - 1].charAt(-1) == '.'){
+    if (target.id == 'dec' && operation[operation.length - 1].includes('.')){
         return;
     }
 
@@ -120,8 +188,9 @@ function addToNumber(target, operation){
         operation[1] = '';
     }
 
-    operation[operation.length - 1] += target.id;
+    let toPush = (target.id == 'zero' ? '0' : (target.id == 'dec' ? '.' : target.id));
+    operation[operation.length - 1] += toPush;
 }
 
 
-main()
+main();
