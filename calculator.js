@@ -148,7 +148,6 @@ function clearOperation(operation) {
 
 
 function addOperator(target, operation) {
-    operation[0] = false;
     switch (operation.length) {
         case 4:
             evaluateOperation(operation, target.textContent);
@@ -157,6 +156,7 @@ function addOperator(target, operation) {
 
         case 2:
             if (target.textContent !== '=' && operation[1] != '') {
+                operation[0] = false;
                 operation.push(target.textContent);
                 toggleActiveOperator(operation[2], true);
             }
