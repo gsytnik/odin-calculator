@@ -123,7 +123,7 @@ function evaluateOperation(operation, operator) {
 
         case '/':
             if (parseFloat(operation[3]) == 0){
-                clearOperation();
+                clearOperation(operation);
                 operation.push('FOOL!');
                 return;
             }
